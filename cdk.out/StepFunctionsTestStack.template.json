@@ -1,0 +1,763 @@
+{
+  "Resources": {
+    "LambdaTestDefaultsServiceRole84E1560A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestDefaults/ServiceRole/Resource"
+      }
+    },
+    "LambdaTestDefaultsServiceRoleDefaultPolicy9A889CE4": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "cloudformation:DescribeStackResource",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:DescribeStacks",
+                "cloudformation:ListStackResources",
+                "s3:GetBucketTagging",
+                "s3:GetBucketVersioning"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "LambdaTestDefaultsServiceRoleDefaultPolicy9A889CE4",
+        "Roles": [
+          {
+            "Ref": "LambdaTestDefaultsServiceRole84E1560A"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestDefaults/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "LambdaTestDefaults1FF7A65D": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "LambdaTestDefaultsLambdaSourceBucketNameParameter537B577C"
+          },
+          "S3Key": {
+            "Ref": "LambdaTestDefaultsLambdaSourceObjectKeyParameterD3ED54FE"
+          }
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaTestDefaultsServiceRole84E1560A",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.8",
+        "MemorySize": 128,
+        "Timeout": 180
+      },
+      "DependsOn": [
+        "LambdaTestDefaultsServiceRoleDefaultPolicy9A889CE4",
+        "LambdaTestDefaultsServiceRole84E1560A"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestDefaults/Resource"
+      }
+    },
+    "LambdaTestDefaultsEventInvokeConfig65BC5F81": {
+      "Type": "AWS::Lambda::EventInvokeConfig",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LambdaTestDefaults1FF7A65D"
+        },
+        "Qualifier": "$LATEST",
+        "MaximumRetryAttempts": 0
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestDefaults/EventInvokeConfig/Resource"
+      }
+    },
+    "LambdaTestNetworkingServiceRoleC4CDA74B": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestNetworking/ServiceRole/Resource"
+      }
+    },
+    "LambdaTestNetworkingServiceRoleDefaultPolicy85383C89": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "cloudformation:DescribeStackResource",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:DescribeStacks",
+                "cloudformation:ListStackResources",
+                "ec2:DescribeVpcs",
+                "ec2:DescribeSubnets"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "LambdaTestNetworkingServiceRoleDefaultPolicy85383C89",
+        "Roles": [
+          {
+            "Ref": "LambdaTestNetworkingServiceRoleC4CDA74B"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestNetworking/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "LambdaTestNetworking0B7A8E03": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "LambdaTestDefaultsLambdaSourceBucketNameParameter537B577C"
+          },
+          "S3Key": {
+            "Ref": "LambdaTestDefaultsLambdaSourceObjectKeyParameterD3ED54FE"
+          }
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaTestNetworkingServiceRoleC4CDA74B",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.8",
+        "MemorySize": 512,
+        "Timeout": 180
+      },
+      "DependsOn": [
+        "LambdaTestNetworkingServiceRoleDefaultPolicy85383C89",
+        "LambdaTestNetworkingServiceRoleC4CDA74B"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestNetworking/Resource"
+      }
+    },
+    "LambdaTestNetworkingEventInvokeConfig5CF063E2": {
+      "Type": "AWS::Lambda::EventInvokeConfig",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LambdaTestNetworking0B7A8E03"
+        },
+        "Qualifier": "$LATEST",
+        "MaximumRetryAttempts": 0
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestNetworking/EventInvokeConfig/Resource"
+      }
+    },
+    "LambdaTestSecurityServiceRole3EECE97D": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestSecurity/ServiceRole/Resource"
+      }
+    },
+    "LambdaTestSecurityServiceRoleDefaultPolicy2AD8E9B6": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "cloudformation:DescribeStackResource",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:DescribeStacks",
+                "cloudformation:ListStackResources",
+                "s3:GetBucketAcl",
+                "ec2:DescribeRouteTables"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "LambdaTestSecurityServiceRoleDefaultPolicy2AD8E9B6",
+        "Roles": [
+          {
+            "Ref": "LambdaTestSecurityServiceRole3EECE97D"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestSecurity/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "LambdaTestSecurity4DC1F2BA": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "LambdaTestDefaultsLambdaSourceBucketNameParameter537B577C"
+          },
+          "S3Key": {
+            "Ref": "LambdaTestDefaultsLambdaSourceObjectKeyParameterD3ED54FE"
+          }
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaTestSecurityServiceRole3EECE97D",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.8",
+        "MemorySize": 512,
+        "Timeout": 180
+      },
+      "DependsOn": [
+        "LambdaTestSecurityServiceRoleDefaultPolicy2AD8E9B6",
+        "LambdaTestSecurityServiceRole3EECE97D"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestSecurity/Resource"
+      }
+    },
+    "LambdaTestSecurityEventInvokeConfig456EDB3A": {
+      "Type": "AWS::Lambda::EventInvokeConfig",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LambdaTestSecurity4DC1F2BA"
+        },
+        "Qualifier": "$LATEST",
+        "MaximumRetryAttempts": 0
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaTestSecurity/EventInvokeConfig/Resource"
+      }
+    },
+    "LambdaConsolidateResultsServiceRoleD6491A67": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaConsolidateResults/ServiceRole/Resource"
+      }
+    },
+    "LambdaConsolidateResults43237531": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "LambdaTestDefaultsLambdaSourceBucketNameParameter537B577C"
+          },
+          "S3Key": {
+            "Ref": "LambdaTestDefaultsLambdaSourceObjectKeyParameterD3ED54FE"
+          }
+        },
+        "Handler": "consolidate.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaConsolidateResultsServiceRoleD6491A67",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.8",
+        "MemorySize": 512,
+        "Timeout": 180
+      },
+      "DependsOn": [
+        "LambdaConsolidateResultsServiceRoleD6491A67"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaConsolidateResults/Resource"
+      }
+    },
+    "LambdaConsolidateResultsEventInvokeConfigE821BFFA": {
+      "Type": "AWS::Lambda::EventInvokeConfig",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LambdaConsolidateResults43237531"
+        },
+        "Qualifier": "$LATEST",
+        "MaximumRetryAttempts": 0
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/LambdaConsolidateResults/EventInvokeConfig/Resource"
+      }
+    },
+    "TestMachineRole5645205C": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "states.",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ".amazonaws.com"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/TestMachine/Role/Resource"
+      }
+    },
+    "TestMachineRoleDefaultPolicy774CA1F0": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaConsolidateResults43237531",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaTestDefaults1FF7A65D",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaTestNetworking0B7A8E03",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaTestSecurity4DC1F2BA",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "TestMachineRoleDefaultPolicy774CA1F0",
+        "Roles": [
+          {
+            "Ref": "TestMachineRole5645205C"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/TestMachine/Role/DefaultPolicy/Resource"
+      }
+    },
+    "TestMachine62A036F3": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "TestMachineRole5645205C",
+            "Arn"
+          ]
+        },
+        "DefinitionString": {
+          "Fn::Join": [
+            "",
+            [
+              "{\"StartAt\":\"StartState\",\"States\":{\"StartState\":{\"Type\":\"Pass\",\"Next\":\"Run tests in parallel\"},\"Run tests in parallel\":{\"Type\":\"Parallel\",\"Next\":\"Invoke Consolidate Results\",\"Branches\":[{\"StartAt\":\"Invoke Default Tests\",\"States\":{\"Invoke Default Tests\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaTestDefaults1FF7A65D",
+                  "Arn"
+                ]
+              },
+              "\",\"Payload\":{\"suite\":\"default\"},\"InvocationType\":\"RequestResponse\"}}}},{\"StartAt\":\"Invoke Networking Tests\",\"States\":{\"Invoke Networking Tests\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaTestNetworking0B7A8E03",
+                  "Arn"
+                ]
+              },
+              "\",\"Payload\":{\"suite\":\"networking\"},\"InvocationType\":\"RequestResponse\"}}}},{\"StartAt\":\"Invoke Security Tests\",\"States\":{\"Invoke Security Tests\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaTestSecurity4DC1F2BA",
+                  "Arn"
+                ]
+              },
+              "\",\"Payload\":{\"suite\":\"security\"},\"InvocationType\":\"RequestResponse\"}}}}]},\"Invoke Consolidate Results\":{\"Next\":\"Did any tests fail\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+              {
+                "Fn::GetAtt": [
+                  "LambdaConsolidateResults43237531",
+                  "Arn"
+                ]
+              },
+              "\",\"Payload.$\":\"$\",\"InvocationType\":\"RequestResponse\"}},\"Did any tests fail\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.testsFailed\",\"NumericGreaterThan\":0,\"Next\":\"At least one test failed\"}],\"Default\":\"All tests passed\"},\"All tests passed\":{\"Type\":\"Pass\",\"End\":true},\"At least one test failed\":{\"Type\":\"Fail\",\"Error\":\"$.failures\",\"Cause\":\"States.StringToJson($.failures)\"}}}"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "TestMachineRoleDefaultPolicy774CA1F0",
+        "TestMachineRole5645205C"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/TestMachine/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Modules": "aws-cdk=1.124.0,@aws-cdk/assets=1.67.0,@aws-cdk/aws-applicationautoscaling=1.67.0,@aws-cdk/aws-autoscaling=1.67.0,@aws-cdk/aws-autoscaling-common=1.67.0,@aws-cdk/aws-autoscaling-hooktargets=1.67.0,@aws-cdk/aws-cloudformation=1.67.0,@aws-cdk/aws-cloudwatch=1.67.0,@aws-cdk/aws-codebuild=1.67.0,@aws-cdk/aws-codecommit=1.67.0,@aws-cdk/aws-codeguruprofiler=1.67.0,@aws-cdk/aws-codepipeline=1.67.0,@aws-cdk/aws-codepipeline-actions=1.67.0,@aws-cdk/aws-ec2=1.67.0,@aws-cdk/aws-ecr=1.67.0,@aws-cdk/aws-ecr-assets=1.67.0,@aws-cdk/aws-ecs=1.67.0,@aws-cdk/aws-elasticloadbalancingv2=1.67.0,@aws-cdk/aws-events=1.67.0,@aws-cdk/aws-events-targets=1.67.0,@aws-cdk/aws-iam=1.67.0,@aws-cdk/aws-kms=1.67.0,@aws-cdk/aws-lambda=1.67.0,@aws-cdk/aws-logs=1.67.0,@aws-cdk/aws-s3=1.67.0,@aws-cdk/aws-s3-assets=1.67.0,@aws-cdk/aws-servicediscovery=1.67.0,@aws-cdk/aws-sns=1.67.0,@aws-cdk/aws-sns-subscriptions=1.67.0,@aws-cdk/aws-sqs=1.67.0,@aws-cdk/aws-ssm=1.67.0,@aws-cdk/aws-stepfunctions=1.67.0,@aws-cdk/aws-stepfunctions-tasks=1.67.0,@aws-cdk/cloud-assembly-schema=1.67.0,@aws-cdk/core=1.67.0,@aws-cdk/custom-resources=1.67.0,@aws-cdk/cx-api=1.67.0,@aws-cdk/region-info=1.67.0,jsii-runtime=node.js/v14.18.3"
+      },
+      "Metadata": {
+        "aws:cdk:path": "StepFunctionsTestStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Parameters": {
+    "LambdaTestDefaultsLambdaSourceBucketNameParameter537B577C": {
+      "Type": "String"
+    },
+    "LambdaTestDefaultsLambdaSourceObjectKeyParameterD3ED54FE": {
+      "Type": "String"
+    }
+  },
+  "Outputs": {
+    "StateMachineArn": {
+      "Value": {
+        "Ref": "TestMachine62A036F3"
+      }
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

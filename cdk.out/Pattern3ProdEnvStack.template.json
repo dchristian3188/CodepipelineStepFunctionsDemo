@@ -1,0 +1,674 @@
+{
+  "Resources": {
+    "MyPattern3ProductionBucket9C4B31E1": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "aws:kms"
+              }
+            }
+          ]
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        },
+        "Tags": [
+          {
+            "Key": "myDefaultTag",
+            "Value": "hooray-for-tagging"
+          }
+        ],
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionBucket/Resource"
+      }
+    },
+    "MyPattern3ProductionVpc4A304BCE": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/Resource"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet1SubnetE81A71B4": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/18",
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1/Subnet"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet1RouteTableA288DD34": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1/RouteTable"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet1RouteTableAssociation29D5BDAF": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet1RouteTableA288DD34"
+        },
+        "SubnetId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet1SubnetE81A71B4"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1/RouteTableAssociation"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet1DefaultRoute65D6DAEA": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet1RouteTableA288DD34"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "MyPattern3ProductionVpcIGW5C86E601"
+        }
+      },
+      "DependsOn": [
+        "MyPattern3ProductionVpcVPCGW06FDF538"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1/DefaultRoute"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet1EIP820D5AD6": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1/EIP"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet1NATGateway7D69FC8D": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "MyPattern3ProductionVpcPublicSubnet1EIP820D5AD6",
+            "AllocationId"
+          ]
+        },
+        "SubnetId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet1SubnetE81A71B4"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet1/NATGateway"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet2Subnet760B74BF": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.64.0/18",
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2/Subnet"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet2RouteTableB0E3D176": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2/RouteTable"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet2RouteTableAssociation79D809AB": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet2RouteTableB0E3D176"
+        },
+        "SubnetId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet2Subnet760B74BF"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2/RouteTableAssociation"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet2DefaultRouteD1A327F8": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet2RouteTableB0E3D176"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "MyPattern3ProductionVpcIGW5C86E601"
+        }
+      },
+      "DependsOn": [
+        "MyPattern3ProductionVpcVPCGW06FDF538"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2/DefaultRoute"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet2EIP0F36D2D6": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2/EIP"
+      }
+    },
+    "MyPattern3ProductionVpcPublicSubnet2NATGatewayE73E3612": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "MyPattern3ProductionVpcPublicSubnet2EIP0F36D2D6",
+            "AllocationId"
+          ]
+        },
+        "SubnetId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet2Subnet760B74BF"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PublicSubnet2/NATGateway"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet1Subnet28045DD6": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.128.0/18",
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet1/Subnet"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet1RouteTable6247A918": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet1/RouteTable"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet1RouteTableAssociation9CB8E81E": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPrivateSubnet1RouteTable6247A918"
+        },
+        "SubnetId": {
+          "Ref": "MyPattern3ProductionVpcPrivateSubnet1Subnet28045DD6"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet1/RouteTableAssociation"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet1DefaultRoute36F7381B": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPrivateSubnet1RouteTable6247A918"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet1NATGateway7D69FC8D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet1/DefaultRoute"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet2SubnetFAD3F23F": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.192.0/18",
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet2/Subnet"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet2RouteTableCE9E8FDA": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet2/RouteTable"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet2RouteTableAssociationB3BB0472": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPrivateSubnet2RouteTableCE9E8FDA"
+        },
+        "SubnetId": {
+          "Ref": "MyPattern3ProductionVpcPrivateSubnet2SubnetFAD3F23F"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet2/RouteTableAssociation"
+      }
+    },
+    "MyPattern3ProductionVpcPrivateSubnet2DefaultRoute95EDA144": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "MyPattern3ProductionVpcPrivateSubnet2RouteTableCE9E8FDA"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "MyPattern3ProductionVpcPublicSubnet2NATGatewayE73E3612"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/PrivateSubnet2/DefaultRoute"
+      }
+    },
+    "MyPattern3ProductionVpcIGW5C86E601": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Pattern3ProdEnvStack/MyPattern3ProductionVpc"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/IGW"
+      }
+    },
+    "MyPattern3ProductionVpcVPCGW06FDF538": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "MyPattern3ProductionVpc4A304BCE"
+        },
+        "InternetGatewayId": {
+          "Ref": "MyPattern3ProductionVpcIGW5C86E601"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/MyPattern3ProductionVpc/VPCGW"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Modules": "aws-cdk=1.124.0,@aws-cdk/assets=1.67.0,@aws-cdk/aws-applicationautoscaling=1.67.0,@aws-cdk/aws-autoscaling=1.67.0,@aws-cdk/aws-autoscaling-common=1.67.0,@aws-cdk/aws-autoscaling-hooktargets=1.67.0,@aws-cdk/aws-cloudformation=1.67.0,@aws-cdk/aws-cloudwatch=1.67.0,@aws-cdk/aws-codebuild=1.67.0,@aws-cdk/aws-codecommit=1.67.0,@aws-cdk/aws-codeguruprofiler=1.67.0,@aws-cdk/aws-codepipeline=1.67.0,@aws-cdk/aws-codepipeline-actions=1.67.0,@aws-cdk/aws-ec2=1.67.0,@aws-cdk/aws-ecr=1.67.0,@aws-cdk/aws-ecr-assets=1.67.0,@aws-cdk/aws-ecs=1.67.0,@aws-cdk/aws-elasticloadbalancingv2=1.67.0,@aws-cdk/aws-events=1.67.0,@aws-cdk/aws-events-targets=1.67.0,@aws-cdk/aws-iam=1.67.0,@aws-cdk/aws-kms=1.67.0,@aws-cdk/aws-lambda=1.67.0,@aws-cdk/aws-logs=1.67.0,@aws-cdk/aws-s3=1.67.0,@aws-cdk/aws-s3-assets=1.67.0,@aws-cdk/aws-servicediscovery=1.67.0,@aws-cdk/aws-sns=1.67.0,@aws-cdk/aws-sns-subscriptions=1.67.0,@aws-cdk/aws-sqs=1.67.0,@aws-cdk/aws-ssm=1.67.0,@aws-cdk/aws-stepfunctions=1.67.0,@aws-cdk/aws-stepfunctions-tasks=1.67.0,@aws-cdk/cloud-assembly-schema=1.67.0,@aws-cdk/core=1.67.0,@aws-cdk/custom-resources=1.67.0,@aws-cdk/cx-api=1.67.0,@aws-cdk/region-info=1.67.0,jsii-runtime=node.js/v14.18.3"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Pattern3ProdEnvStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

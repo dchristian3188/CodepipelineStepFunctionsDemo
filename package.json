@@ -1,0 +1,40 @@
+{
+  "name": "pattern3",
+  "version": "0.1.0",
+  "bin": {
+    "pattern3": "bin/pattern3.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "copy-lambda-module": "cp -R ./lambda-code/AWSTestModule/ /usr/local/microsoft/powershell/7/Modules/AWSTestModule/",
+    "package-defaults": "cd lambda-test-defaults && zip -rj ../bin/lambda/lambda-defaults-code.zip index.py && chmod 777 ../bin/lambda/lambda-defaults-code.zip && cd ..",
+    "package-networking": "zip -rj ./bin/lambda/lambda-networking-code.zip ./lambda-test-networking/index.py",
+    "package-security": "zip -rj ./bin/lambda/lambda-security-code.zip ./lambda-test-security/index.py",
+    "package-lambdas": "mkdir ./bin/lambda && npm run package-defaults && npm run package-networking && npm run package-security",
+    "synth": "npm run build && cdk synth",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.67.0",
+    "@types/jest": "^26.0.10",
+    "@types/node": "10.17.27",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.2.0",
+    "aws-cdk": "^1.65.0",
+    "ts-node": "^8.1.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-codedeploy": "^1.67.0",
+    "@aws-cdk/aws-codepipeline-actions": "^1.67.0",
+    "@aws-cdk/aws-ecs-patterns": "^1.67.0",
+    "@aws-cdk/aws-lambda": "^1.67.0",
+    "@aws-cdk/aws-stepfunctions-tasks": "^1.67.0",
+    "@aws-cdk/core": "^1.67.0",
+    "concurrently": "^5.3.0",
+    "path": "^0.12.7",
+    "source-map-support": "^0.5.16"
+  }
+}
